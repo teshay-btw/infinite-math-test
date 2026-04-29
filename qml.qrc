@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/qt/qml/math">
+        <file>main.qml</file>
+	<file>icon.png</file>
+    </qresource>
+</RCC>
