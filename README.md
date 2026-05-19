@@ -4,20 +4,20 @@ Infinite Math Test is a lightweight training app designed to help you sharpen yo
 # Features
 - Infinite stream of randomly generated math problems
 - Clean and minimalistic interface (Qt + QML)
-- Instant feedback on each answer
-
-# VirusTotal Notice
-Some antivirus engines may flag the executable as suspicious due to it being a small, unsigned Qt application.
-These detections are false positives - the full source code is available in this repository, and the app contains no harmful functionality.
+- Instant feedback on each answer - red line with the correct answer or green if the answer is correct
+- There are dark and white themes
+- Option to enable negative numbers
+- Option to enable parentheses mode, which will display three numbers and randomize the parentheses' positions
+- Option to enable a timer and set any number of seconds for each math problem
+- You can display statistics, including the number of correct and incorrect answers, the percentage of incorrect answers, and the number of correct answers in a row
+- Option to enable the numpad if you're too lazy to type (I'm one of those too)
 
 # How to Run
-- Download the latest release from the Releases section
-- Unzip the archive
-- Run "Infinite Math Test.exe"
+- Download the latest release zip file "Infinite Math Test.zip" from the "Releases" section.
+- Unzip the archive.
+- Create a shortcut to the "Infinite Math Test.exe" application and move it anywhere.
 
-
-
-<img width="642" height="512" alt="image" src="https://github.com/user-attachments/assets/abbf1351-0a7f-43d5-83e5-fa9c1fc5e101" />
-
-
-<img width="642" height="512" alt="image" src="https://github.com/user-attachments/assets/69ce7e4b-6f1c-4aba-9ef4-958369796e34" />
+# Screenshots
+<img width="642" height="512" alt="infinite_math_test_E5XHmsWGOV" src="https://github.com/user-attachments/assets/f6bd02f4-1d86-407f-95e2-e002533638c2" />
+<img width="642" height="512" alt="infinite_math_test_JTRIb1mN7C" src="https://github.com/user-attachments/assets/82876fa9-b68b-4c02-8eee-a07aa0b77958" />
+<img width="642" height="512" alt="infinite_math_test_QsUbtYyC8w" src="https://github.com/user-attachments/assets/a18f770e-61fb-4ba0-849f-a2525fd505ad" />
