@@ -16,6 +16,7 @@ Infinite Math Test is a lightweight training app designed to help you sharpen yo
 - Download the latest release zip file "Infinite Math Test.zip" from the "Releases" section.
 - Unzip the archive.
 - Create a shortcut to the "Infinite Math Test.exe" application and move it anywhere.
+- Launch the application by double-clicking on the shortcut.
 
 # Screenshots
 <img width="642" height="512" alt="infinite_math_test_E5XHmsWGOV" src="https://github.com/user-attachments/assets/f6bd02f4-1d86-407f-95e2-e002533638c2" />
