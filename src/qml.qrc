@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/qt/qml/infinite_math_test">
+        <file>main.qml</file>
+	<file>icon.png</file>
+	<file>cross.png</file>
+	<file>white_cross.png</file>
+	<file>settings_icon.png</file>
+    </qresource>
+</RCC>
