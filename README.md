@@ -19,6 +19,6 @@ Infinite Math Test is a lightweight training app designed to help you sharpen yo
 - Launch the application by double-clicking on the shortcut.
 
 # Screenshots
-<img width="642" height="512" alt="infinite_math_test_E5XHmsWGOV" src="https://github.com/user-attachments/assets/f6bd02f4-1d86-407f-95e2-e002533638c2" />
-<img width="642" height="512" alt="infinite_math_test_JTRIb1mN7C" src="https://github.com/user-attachments/assets/82876fa9-b68b-4c02-8eee-a07aa0b77958" />
-<img width="642" height="512" alt="infinite_math_test_QsUbtYyC8w" src="https://github.com/user-attachments/assets/a18f770e-61fb-4ba0-849f-a2525fd505ad" />
+<img width="642" height="512" alt="infinite_math_test_3jSOTszxsa" src="https://github.com/user-attachments/assets/538fee78-f835-446a-beef-03cc6c92a5be" />
+<img width="642" height="512" alt="infinite_math_test_bsmNNTgkfh" src="https://github.com/user-attachments/assets/602d1d19-b44e-46ee-be02-41a2ca06cd00" />
+<img width="642" height="512" alt="infinite_math_test_3KVEHVOGkx" src="https://github.com/user-attachments/assets/588a3ab8-5bbe-411d-8f98-1c990c8e122c" />
