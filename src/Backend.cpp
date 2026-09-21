@@ -5,7 +5,7 @@
 #include <QTimer>
 #include <math.h>
 #include <thread>
-
+#include <sstream>
 
 
 Backend::Backend(QObject* parent) : QObject(parent)
@@ -13,6 +13,61 @@ Backend::Backend(QObject* parent) : QObject(parent)
 	srand(time(NULL));
 	get_primary_numbers(primary_numbers);
 
+	HANDLE file = CreateFileW(
+		L"settings.txt",
+		GENERIC_READ,
+		FILE_SHARE_READ,
+		NULL,
+		OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+	);
+	if (file != INVALID_HANDLE_VALUE) {
+		DWORD fileSize = GetFileSize(file, NULL);
+		if (fileSize == INVALID_FILE_SIZE) {
+			qDebug() << "Settings file size error";
+			CloseHandle(file);
+		}
+		string buff;
+		buff.resize(fileSize);
+		
+
+		DWORD bytesRead;
+		if (!ReadFile(file, buff.data(), fileSize, &bytesRead, NULL)) {
+			qDebug() << "Settings file error";
+		}
+		if (bytesRead != fileSize) {
+			qDebug() << "Settings file bytes error";
+		}
+
+
+		std::stringstream ss(buff);
+		QList<int> temp;
+
+		double value;
+		while (ss >> value) {
+			temp.push_back(static_cast<int>(value));
+		}
+
+
+		streak = temp[0];
+		correct = temp[1];
+		incorrect = temp[2];
+		overall = temp[3];
+		is_timer_enabled = temp[4];
+		add_negatives = temp[5];
+		add_brackets = temp[6];
+		show_stats = temp[7];
+		bool_theme = temp[8];
+		bool_numpad = temp[9];
+		is_timer_enabled = temp[10];
+		timer_seconds = temp[11];
+		incorrect_percent = temp[12];
+
+		
+	}
+	
+	CloseHandle(file);
 
 	connect(&timer_seconds_obj, &QTimer::timeout, this, [this]() {
 		timer_seconds_temp--;
@@ -45,16 +100,37 @@ void Backend::setRoot(QObject* root)
 	numpad = m_root->findChild<QObject*>("numpad");
 	numpad->setProperty("visible", false);
 
-
 	userinput = m_root->findChild<QObject*>("userinput");
 
 	streak_text = m_root->findChild<QObject*>("streak");
-
+	streak_text->setProperty("text", streak);
 	incorrect_percent_text = m_root->findChild<QObject*>("incorrect_percent");
+	incorrect_percent_text->setProperty("text", QString::number(incorrect_percent) + QString("%"));
 	correct_text = m_root->findChild<QObject*>("correct_number_text");
+	correct_text->setProperty("text", correct);
 	incorrect_text = m_root->findChild<QObject*>("incorrect_number_text");
+	incorrect_text->setProperty("text", incorrect);
 
-	
+	negative_numbers_checkbox = m_root->findChild<QObject*>("negative_cb");
+	negative_numbers_checkbox->setProperty("checked", add_negatives);
+
+	brackets_checkbox = m_root->findChild<QObject*>("brackets_cb");
+	brackets_checkbox->setProperty("checked", add_brackets);
+
+	theme_checkbox = m_root->findChild<QObject*>("dark_theme_cb");
+	theme_checkbox->setProperty("checked", bool_theme);
+
+	show_stats_checkbox = m_root->findChild<QObject*>("stats_cb");
+	show_stats_checkbox->setProperty("checked", show_stats);
+
+	numpad_checkbox = m_root->findChild<QObject*>("numpad_cb");
+	numpad_checkbox->setProperty("checked", bool_numpad);
+
+	timer_checkbox = m_root->findChild<QObject*>("timer_cb");
+	timer_checkbox->setProperty("checked", is_timer_enabled);
+
+	seconds_userinput = m_root->findChild<QObject*>("seconds_userinput");
+	seconds_userinput->setProperty("text", QString::number(timer_seconds));
 }
 
 void Backend::get_primary_numbers(vector<int>& vec)
@@ -103,14 +179,12 @@ Q_INVOKABLE bool Backend::check_answer(QString text)
 	else {
 		incorrect_answer();
 		choose_sign();
-		qDebug() << first_number << second_number;
 
 		set_numbers();
 		return false;
 	}
 
 	choose_sign();
-	qDebug() << first_number << second_number;
 
 	set_numbers();
 	
@@ -139,15 +213,30 @@ Q_INVOKABLE void Backend::set_timer_seconds(QString seconds)
 	emit timer_changed(timer_seconds);
 }
 
+Q_INVOKABLE void Backend::set_theme(bool theme)
+{
+	bool_theme = theme;
+}
+
+Q_INVOKABLE void Backend::set_show_stats(bool show_stats)
+{
+	this->show_stats = show_stats;
+}
+
+Q_INVOKABLE void Backend::set_numpad(bool enable_numpad)
+{
+	bool_numpad = enable_numpad;
+}
+
 int Backend::generate_not_prime_number()
 {
 	int num = rand() % 100 + 2;
-	int stop = false;
+	bool stop = false;
 	while (stop == false) {
 		stop = true;
 		for (int el : primary_numbers) {
 			if (el == num) {
-				num = rand() % 100 + 1;
+				num = rand() % 100 + 2;
 				stop = false;
 				break;
 			}
@@ -187,8 +276,8 @@ void Backend::choose_sign()
 	case 0:   /////////// PLUS
 		sign = '+';
 
-		first_number = rand() % 200 + 1;
-		second_number = rand() % 200 + 1;
+		first_number = rand() % 200 + 10;
+		second_number = rand() % 200 + 10;
 		
 		make_negative_if_enabled(first_number);
 		make_negative_if_enabled(second_number);
@@ -199,7 +288,7 @@ void Backend::choose_sign()
 			{
 			case 0:    /////// ADDITIONAL PLUS
 				additional_sign = '+';
-				third_number = rand() % 200 + 1;
+				third_number = rand() % 200 + 10;
 				make_negative_if_enabled(third_number);
 				result = first_number + second_number + third_number;
 
@@ -344,7 +433,7 @@ void Backend::choose_sign()
 			{
 			case 0:       ///// ADDITIONAL PLUS
 				additional_sign = '+';
-				third_number = rand() % 200 + 1;
+				third_number = rand() % 200 + 5;
 				make_negative_if_enabled(third_number);
 				if (rand() % 2 == 0) {
 					result = (first_number - second_number) + third_number;
@@ -490,8 +579,8 @@ void Backend::choose_sign()
 	case 2:
 		sign = '*';
 
-		first_number = rand() % 15 + 1;
-		second_number = rand() % 15 + 1;
+		first_number = rand() % 13 + 2;
+		second_number = rand() % 13 + 2;
 
 		make_negative_if_enabled(first_number);
 		make_negative_if_enabled(second_number);
@@ -502,17 +591,17 @@ void Backend::choose_sign()
 			{
 			case 0:
 				additional_sign = '+';
-				third_number = rand() % 200 + 1;
+				third_number = rand() % 200 + 10;
 				make_negative_if_enabled(third_number);
 				if (rand() % 2 == 0) {
 					result = (first_number * second_number) + third_number;
 					brackets_potisiton = 1;
 				}
 				else {
-					second_number = rand() % 200 + 1;
+					second_number = rand() % 200 + 5;
 					make_negative_if_enabled(second_number);
 
-					third_number = rand() % 200 + 1;
+					third_number = rand() % 200 + 5;
 					make_negative_if_enabled(third_number);
 
 					first_number = 2 + rand() % (5 - 2);
@@ -539,17 +628,16 @@ void Backend::choose_sign()
 					second_number = rand() % 200 + 1;
 					third_number = rand() % second_number + 1;
 					make_negative_if_enabled(third_number);
-					first_number = rand() % 5 + 1;
+					first_number = rand() % 3 + 2;
 					result = first_number * (second_number - third_number);
 					brackets_potisiton = 2;
 				}
 				break;
 			case 2:
 				additional_sign = '*';
-				third_number = 2 + rand() % 8;
+				third_number = rand() % 13 + 2;
 				make_negative_if_enabled(third_number);
-				second_number = 2 + rand() % 8;
-				first_number = 2 + rand() % 8;
+
 				result = first_number * second_number * third_number;
 
 
@@ -794,18 +882,31 @@ void Backend::set_numbers()
 	example = m_root->findChild<QObject*>("example");
 	if (!example) return;
 
-	QString s_first_number = QString::number(first_number);
+
 	QString s_second_number = QString::number(second_number);
+	QString s_first_number = QString::number(first_number);
+	QString s_third_number = QString::number(third_number);
+	if (first_number < 0) {
+		s_first_number = QString("(") + QString::number(first_number) + QString(")");
+	}
+	if (second_number < 0) {
+		s_second_number = QString("(") + QString::number(second_number) + QString(")");
+	}
+	if (third_number < 0) {
+		s_third_number = QString("(") + QString::number(third_number) + QString(")");
+	}
+
 	QString s_sign = QString(sign);
 	QString res;
 
+
 	if (add_brackets) {
-		qDebug() << first_number << sign << second_number << additional_sign << third_number;
+
 		if (brackets_potisiton == 1) {
-			res = QString("(") + s_first_number + QString(" ") + s_sign + QString(" ") + s_second_number + QString(")") +  QString(" ") + QString(additional_sign) + QString(" ") + QString::number(third_number) + QString(" = ");
+			res = QString("(") + s_first_number + QString(" ") + s_sign + QString(" ") + s_second_number + QString(")") + QString(" ") + QString(additional_sign) + QString(" ") + s_third_number + QString(" = ");
 		}
 		else {
-			res = s_first_number + QString(" ") + s_sign + QString(" ") + QString("(")  + s_second_number + QString(" ") + QString(additional_sign) + QString(" ") + QString::number(third_number) + QString(")") + QString(" = ");
+			res = s_first_number + QString(" ") + s_sign + QString(" ") + QString("(")  + s_second_number + QString(" ") + QString(additional_sign) + QString(" ") + s_third_number + QString(")") + QString(" = ");
 		}
 	}
 	else {
@@ -826,7 +927,7 @@ void Backend::incorrect_answer()
 	incorrect_text->setProperty("text", QString::number(incorrect));
 
 	overall++;
-	incorrect_percent = (incorrect / overall) * 100;
+	incorrect_percent = round(static_cast<float>(((static_cast<double>(incorrect) / overall) * 100)));
 	incorrect_percent_text->setProperty("text", QString::number(incorrect_percent) + "%");
 
 	QMetaObject::invokeMethod(m_root, "set_the_answer", Q_ARG(QVariant, QString::number(result)));
@@ -845,7 +946,7 @@ void Backend::correct_answer()
 	correct_text->setProperty("text", QString::number(correct));
 
 	overall++;
-	incorrect_percent = (incorrect / overall) * 100;
+	incorrect_percent = round(static_cast<float>(((static_cast<double>(incorrect) / overall) * 100)));
 	incorrect_percent_text->setProperty("text", QString::number(incorrect_percent) + "%");
 
 	QMetaObject::invokeMethod(m_root, "set_the_answer", Q_ARG(QVariant, QString(" ")));

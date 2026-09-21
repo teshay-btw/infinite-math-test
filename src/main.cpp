@@ -28,5 +28,57 @@ int main(int argc, char* argv[])
     backend.setRoot(root); // устанавливаем в классе переменную которая будет иметь доступ к окну
 
 
+
+
+    QObject::connect(qApp, &QCoreApplication::aboutToQuit, [&backend]() {
+
+        HANDLE save_game_file = CreateFileW(
+            L"settings.txt",
+            GENERIC_READ | GENERIC_WRITE,
+            FILE_SHARE_READ | FILE_SHARE_WRITE,
+            NULL,
+            OPEN_ALWAYS,
+            FILE_ATTRIBUTE_NORMAL,
+            NULL
+        );
+        DWORD bytesWritten;
+        string buffer;
+
+        
+
+        buffer += std::to_string(backend.streak);
+        buffer += "\n";
+        buffer += std::to_string(backend.correct);
+        buffer += "\n";
+        buffer += std::to_string(backend.incorrect);
+        buffer += "\n";
+        buffer += std::to_string(backend.overall);
+        buffer += "\n";
+        buffer += std::to_string(backend.is_timer_enabled);
+        buffer += "\n";
+        buffer += std::to_string(backend.add_negatives);
+        buffer += "\n";
+        buffer += std::to_string(backend.add_brackets);
+        buffer += "\n";
+        buffer += std::to_string(backend.show_stats);
+        buffer += "\n";
+        buffer += std::to_string(backend.bool_theme);
+        buffer += "\n";
+        buffer += std::to_string(backend.bool_numpad);
+        buffer += "\n";
+        buffer += std::to_string(backend.is_timer_enabled);
+        buffer += "\n";
+        buffer += std::to_string(backend.timer_seconds);
+        buffer += "\n";
+        buffer += std::to_string(backend.incorrect_percent);
+        buffer += "\n";
+
+
+        WriteFile(save_game_file, buffer.c_str(), buffer.size(), &bytesWritten, NULL);
+        CloseHandle(save_game_file);
+        });
+
+
+
     return app.exec();
 }

@@ -22,17 +22,51 @@ public:
     Q_INVOKABLE void enable_negatives(bool is_enabled);
     Q_INVOKABLE void enable_brackets(bool is_enabled);
     Q_INVOKABLE void set_timer_seconds(QString seconds);
+    Q_INVOKABLE void set_theme(bool theme);
+    Q_INVOKABLE void set_show_stats(bool show_stats);
+    Q_INVOKABLE void set_numpad(bool enable_numpad);
     int generate_not_prime_number();
     int generate_deleter(int number);
     void make_negative_if_enabled(int& number);
-    void choose_sign();
-    void set_numbers();
+    Q_INVOKABLE void choose_sign();
+    Q_INVOKABLE void set_numbers();
     void incorrect_answer();
     void correct_answer();
 
 
+
+
+
+
+    int streak = 0;
+    QObject* streak_text = nullptr;
+
+    float incorrect_percent = 0;
+    QObject* incorrect_percent_text = nullptr;
+
+    int correct = 0;
+    QObject* correct_text = nullptr;
+
+    int incorrect = 0;
+    QObject* incorrect_text = nullptr;
+
+    int overall = 0;
+
+
+    int timer_seconds = 10;
+    int timer_seconds_temp = timer_seconds;
+    bool is_timer_enabled = 0;
+
+
+    bool add_negatives = 0;
+    bool add_brackets = 0;
+
+    bool show_stats = 0;
+    bool bool_theme = 0;
+    bool bool_numpad = 0;
 signals:
     void timer_changed(int value);
+
 
 
 private:
@@ -53,30 +87,18 @@ private:
     vector<int> primary_numbers;
 
 
-    int streak = 0;
-    QObject* streak_text = nullptr;
-
-    int incorrect_percent = 0;
-    QObject* incorrect_percent_text = nullptr;
-
-    int correct = 0;
-    QObject* correct_text = nullptr;
-
-    float incorrect = 0;
-    QObject* incorrect_text = nullptr;
-
-    int overall = 0;
-    
-    
-    int timer_seconds = 10;
-    int timer_seconds_temp = timer_seconds;
-    bool is_timer_enabled = 0;
-
-    
-    bool add_negatives = 0;
-    bool add_brackets = 0;
+   
     char additional_sign;
     int brackets_potisiton = 0;
 
+
+
+    QObject* negative_numbers_checkbox;
+    QObject* brackets_checkbox;
+    QObject* theme_checkbox;
+    QObject* show_stats_checkbox;
+    QObject* numpad_checkbox;
+    QObject* timer_checkbox;
+    QObject* seconds_userinput;
 };
 

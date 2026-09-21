@@ -48,6 +48,8 @@ Window {
         negative_numbers_text.color = "black"
         
         window.theme = "Normal"
+        settings_button_icon.source = "qrc:/qt/qml/infinite_math_test/settings_icon.png"
+
         dark_theme_cb_background.border.color = "black" 
         stats_cb_background.border.color = "black" 
         negative_cb_background.border.color = "black" 
@@ -102,6 +104,8 @@ Window {
         negative_numbers_text.color = "white"
 
         window.theme = "Dark"
+        settings_button_icon.source = "qrc:/qt/qml/infinite_math_test/settings_icon_black.png"
+
         dark_theme_cb_background.border.color = "white" 
         stats_cb_background.border.color = "white" 
         negative_cb_background.border.color = "white" 
@@ -110,7 +114,6 @@ Window {
         numpad_cb_background.border.color = "white" 
         seconds_settings_text.color = "white"
         seconds_userinput_background.color = "#303030"
-        seconds_userinput_background.border.color = "white"
         seconds_userinput.color = "white"
 
 
@@ -130,8 +133,8 @@ Window {
             numpad.itemAt(i).contentItem.color = "red"
         }
 
-        numpad_button_background.color = "#303030"
-        numpad_button_text.color = "white"
+       // numpad_button_background.color = "#303030"
+       // numpad_button_text.color = "white"
         
 
        
@@ -240,13 +243,12 @@ Window {
                 background: Rectangle {
                     id: userinput_background
                     objectName: "userinput_background"
-                    implicitWidth: 150
+                    implicitWidth: 120
                     implicitHeight: 40
                     color: "white"
                 }
                 Keys.onReturnPressed: {
                     backend.check_answer(userinput.text)
-                    //wrong_answer_animation.start()
                 }
             }
         }
@@ -254,7 +256,6 @@ Window {
             id: rectangle_answer
             width: main_column.width
             height: 5
-            //color: ""
         }
         Text {
             id: right_answer
@@ -275,18 +276,17 @@ Window {
     GridLayout {
         objectName: "numpad"
         id: numpad
-        columns: 3
-        rowSpacing: -6
-        columnSpacing: 8
+        columns: 5
+        rowSpacing: -10
+        columnSpacing: 4
         anchors.centerIn: parent
-        anchors.verticalCenterOffset: 150
-        anchors.horizontalCenterOffset: -250
+        anchors.verticalCenterOffset: 160
+        anchors.horizontalCenterOffset: -200
         
         Repeater {
-             model: ["1","2","3",
-                "4","5","6",
-                "7","8","9",
-                "<", "0", "E"]
+             model: ["1","2","3", "4","5",
+                    "6", "7","8","9", "0",
+                    "","<", "E","-", ""]
             
             Button {
                 id: numpad_button
@@ -304,7 +304,12 @@ Window {
                     font.family: "Consolas"
                     text: parent.text
                     font.bold: true
-                    color: numpad_button.hovered ? "white" : "black"
+                    color: { 
+                        if (window.theme === "Normal")
+                            numpad_button.hovered ? "white" : "black" 
+                        else
+                            numpad_button.hovered ? "#303030" : "white" 
+                    }
                     font.pixelSize: 24
                     anchors.centerIn: parent
                     Behavior on color {
@@ -315,9 +320,19 @@ Window {
                     objectName: "numpad_buttons_background"
                     id: numpad_button_background
                     radius: 3
-                    color: numpad_button.hovered ? "black" : "white"
+                    color: { 
+                        if (window.theme === "Normal")
+                            numpad_button.hovered ? "black" : "white" 
+                        else
+                            numpad_button.hovered ? "white" : "#303030" 
+                    }
                     border.width: 2;
-                    border.color: "black"; 
+                    border.color: { 
+                        if (window.theme === "Normal")
+                            return "black" 
+                        else
+                            return "white" 
+                    }
                     Behavior on color {
                         ColorAnimation { duration: 150 }
                     }
@@ -335,7 +350,9 @@ Window {
         }
     }
 
+    //////////////// STATS
     Column {
+        visible: false
         id: stats
         topPadding: 10
         anchors.horizontalCenter: parent.horizontalCenter
@@ -346,10 +363,9 @@ Window {
                 id: correct_number_text
                 objectName: "correct_number_text"
                 font.pointSize: 15
-                text: "0"
                 font.letterSpacing: 1
                 color: "#08D600" 
-                font.bold: true
+                
             }
             Text {
                 id: separator
@@ -362,10 +378,9 @@ Window {
                 id: incorrect_number_text
                 objectName: "incorrect_number_text"
                 font.pointSize: 15
-                text: "0"
                 font.letterSpacing: 1
                 color: "red" 
-                font.bold: true
+                
             }
         }
         Row {
@@ -381,10 +396,9 @@ Window {
                 id: incorrect_percent
                 objectName: "incorrect_percent"
                 font.pointSize: 15
-                text: "0%"
                 font.letterSpacing: 1
                 color: "red"
-                font.bold: true
+                
             }
         }
         Row {
@@ -400,10 +414,9 @@ Window {
                 id: streak
                 objectName: "streak"
                 font.pointSize: 15
-                text: "0"
                 font.letterSpacing: 1
                 color: "#08D600"
-                font.bold: true
+                
             }
         }
          //////////  BRACKETS MODE
@@ -421,7 +434,7 @@ Window {
                 id: brackets_on
                 font.pointSize: 15
                 color: "#08D600"
-                font.bold: true
+                y: 1
                 text: "ON"
                 font.letterSpacing: 1
             }
@@ -444,20 +457,24 @@ Window {
                 id: negative_numbers_on
                 font.pointSize: 15
                 color: "#08D600"
-                font.bold: true
+                y: 2
                 text: "ON"
                 font.letterSpacing: 1
             }
             
         }
-            /////////// TIMER
+           
+    }
+
+     /////////// TIMER
         Text {
             visible: false
             anchors.horizontalCenter: parent.horizontalCenter
             id: timer
+            y: 150
             objectName: "timer"
             font.pointSize: 17
-            text: "10"
+            text: seconds_userinput.text
             color: {
                 if (window.theme === "Normal") {
                     return text === "0" ? "red" 
@@ -476,9 +493,6 @@ Window {
             }
             font.letterSpacing: 1
         }
-    }
-
-    
    
 
 
@@ -502,10 +516,13 @@ Window {
             onClicked: {
                 settings.visible = true
                 settings_button.visible = false
+                
             }
         }
         Image {
+            id: settings_button_icon
             source: "qrc:/qt/qml/infinite_math_test/settings_icon.png"
+            
             width: 40
             height: 40
         }
@@ -524,10 +541,10 @@ Window {
             height: 20
             background: Rectangle { color: "transparent" }
             anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: -210
+            anchors.verticalCenterOffset: -200
 
             anchors.horizontalCenter: parent.left
-            anchors.horizontalCenterOffset: 30
+            anchors.horizontalCenterOffset: 40
 
        
             MouseArea {
@@ -537,20 +554,16 @@ Window {
 
                     if (timer_cb.checked === true) {
                         if (seconds_userinput.text === "") {
-                            seconds_userinput_background.border.color = "red"
+                            backend.set_timer_seconds("10")
                         }
                         else {
                             backend.set_timer_seconds(seconds_userinput.text)
-                            settings.visible = false
-                            settings_button.visible = true
-                            userinput.focus = true
                         }
                     }
-                    else {
-                        settings.visible = false
-                        settings_button.visible = true
-                        userinput.focus = true
-                    }
+                    settings.visible = false
+                    settings_button.visible = true
+                    userinput.focus = true
+
                 }
             }
             Image {
@@ -558,6 +571,49 @@ Window {
                 source: "qrc:/qt/qml/infinite_math_test/cross.png"
                 width: 20
                 height: 20
+            }
+        }
+        Row {
+            id: seconds_row
+            visible: false
+            spacing: 50
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenterOffset: 102
+            anchors.horizontalCenterOffset: 32
+            Text {
+                id: seconds_settings_text
+                font.pointSize: 14
+                text: "Seconds: "
+                font.letterSpacing: 1
+                color: "black"
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenterOffset: 8
+                
+            }
+            TextField {
+
+                id: seconds_userinput
+                objectName: "seconds_userinput"
+                z: -1
+                y: 10
+                font.pointSize: 14
+                font.letterSpacing: 1
+                font.bold: true
+                color: "black"
+                focus: true
+                
+                background: Rectangle {
+                    id: seconds_userinput_background
+                    objectName: "seconds_userinput_background"
+                    implicitWidth: 100
+                    implicitHeight: 20
+                    
+                    
+                }
+
+                
+                   
             }
         }
         Column {
@@ -579,6 +635,7 @@ Window {
                 }
                 CheckBox {
                     id: dark_theme_cb
+                    objectName: "dark_theme_cb"
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: 3
                     checked: false
@@ -587,9 +644,11 @@ Window {
                     onCheckedChanged: {
                         if (checked === true) { 
                             window.enable_dark_theme()  
+                            backend.set_theme(1)
                         }
                         else {
                             window.enable_normal_theme()
+                            backend.set_theme(0)
                         }
                     }
                     background: Rectangle {
@@ -634,15 +693,17 @@ Window {
                     id: numpad_cb
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: 3
-                    checked: false
+                    objectName: "numpad_cb"
                     width: 20
                     height: 20
                     onCheckedChanged: {
                         if (checked === true) { 
                             numpad.visible = true
+                            backend.set_numpad(1)
                         }
                         else {
                             numpad.visible = false
+                            backend.set_numpad(0)
                         }
                     }
                     background: Rectangle {
@@ -695,15 +756,17 @@ Window {
                     id: stats_cb
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: 3
-                    checked: false
+                    objectName: "stats_cb"
                     width: 20
                     height: 20
                     onCheckedChanged: {
                         if (checked === true) { 
                             stats.visible = true
+                            backend.set_show_stats(1)
                         }
                         else {
                             stats.visible = false
+                            backend.set_show_stats(0)
                         }
                     }
                     background: Rectangle {
@@ -746,20 +809,34 @@ Window {
                 }
                 CheckBox {
                     id: negative_cb
+                    objectName: "negative_cb"
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: 3
-                    checked: false
+                    
                     width: 20
                     height: 20
                     onCheckedChanged: {
+                       
                         if (checked === true) { 
                             backend.enable_negatives(true)
                             negative_numbers_text_on.visible = true
+                            example_text.font.pixelSize = example_text.font.pixelSize-10
+                            userinput.font.pixelSize = userinput.font.pixelSize - 10
+                            right_answer.font.pointSize = right_answer.font.pointSize - 10
+                            example_text.y = example_text.y + 5
+                            userinput.y = userinput.y + 5
                         }
                         else {
                             backend.enable_negatives(false)
                             negative_numbers_text_on.visible = false
+                            example_text.font.pixelSize = example_text.font.pixelSize+10
+                            userinput.font.pixelSize = userinput.font.pixelSize + 10
+                            right_answer.font.pointSize = right_answer.font.pointSize + 10
+                            example_text.y = example_text.y - 5
+                            userinput.y = userinput.y - 5
                         }
+                        backend.choose_sign()
+                        backend.set_numbers();
                     }
                     background: Rectangle {
                         id: negative_cb_normal_background
@@ -800,26 +877,34 @@ Window {
                 }
                 CheckBox {
                     id: brackets_cb
+                    objectName: "brackets_cb"
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: 3
-                    checked: false
+                    
                     width: 20
                     height: 20
                     onCheckedChanged: {
+                        
                         if (checked === true) { 
                             backend.enable_brackets(true)
-                            example_text.font.pointSize = 30
-                            userinput.font.pointSize = 30
+                            example_text.font.pixelSize = example_text.font.pixelSize - 10
+                            userinput.font.pixelSize = userinput.font.pixelSize - 10
+                            right_answer.font.pointSize = right_answer.font.pointSize - 10
                             brackets_text_on.visible = true
-                            right_answer.font.pointSize = 30
+                            example_text.y = example_text.y + 5
+                            userinput.y = userinput.y + 5
                         }
                         else {
                             backend.enable_brackets(false)
-                            example_text.font.pointSize = 40
-                            userinput.font.pointSize = 40
+                            example_text.font.pixelSize = example_text.font.pixelSize + 10
+                            userinput.font.pixelSize = userinput.font.pixelSize + 10
+                            right_answer.font.pointSize = right_answer.font.pointSize + 10
                             brackets_text_on.visible = false
-                            right_answer.font.pointSize = 40
+                            example_text.y = example_text.y - 5
+                            userinput.y = userinput.y - 5
                         }
+                        backend.choose_sign()
+                        backend.set_numbers();
                     }
                     background: Rectangle {
                         id: brackets_cb_normal_background
@@ -862,7 +947,7 @@ Window {
                     id: timer_cb
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: 3
-                    checked: false
+                    objectName: "timer_cb"
                     width: 20
                     height: 20
                     onCheckedChanged: {
@@ -870,11 +955,16 @@ Window {
                             timer.visible = true
                             seconds_row.visible = true
                             backend.enable_timer(true)
+                            timer.visible = true
+                            seconds_userinput.focus = true
                         }
                         else {
                             timer.visible = false
                             seconds_row.visible = false
                             backend.enable_timer(false)
+                            timer.visible = false
+                            seconds_userinput.focus = false
+                            
                         }
                     }
                     background: Rectangle {
@@ -902,55 +992,10 @@ Window {
                 
                 }
             }
-            Row {
-                id: seconds_row
-                spacing: 6
-                visible: false
-                Text {
-                    id: seconds_settings_text
-                    font.pointSize: 15
-                    text: "Seconds: "
-                    font.letterSpacing: 1
-                    color: "black"
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.verticalCenterOffset: 5
-                    width: 150
-                }
-                TextField {
-
-                    id: seconds_userinput
-                    objectName: "seconds_userinput"
-
-                    y: 10
-                    font.pointSize: 12
-                    font.letterSpacing: 1
-                    font.bold: true
-                    color: "black"
-                    focus: true
-                    onActiveFocusChanged: {
-                        if (window.theme === "Normal") {
-                            seconds_userinput_background.border.color = "black"
-                        }
-                        else {
-                            seconds_userinput_background.border.color = "white"
-                        }
-                    }
-                    background: Rectangle {
-                        id: seconds_userinput_background
-                        objectName: "seconds_userinput_background"
-                        implicitWidth: 55
-                        implicitHeight: 20
-                        color: "white"
-                        border.color: "black"
-                        border.width: 2
-                    
-                    }
-
-                
-                   
-                }
-            }
+            
         }
+        
+        
     }
 
 }
