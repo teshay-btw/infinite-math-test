@@ -20,6 +20,6 @@ Infinite Math Test is a lightweight training app designed to help you sharpen yo
 
 # Screenshots
 <img width="642" height="512" alt="infinite_math_test_Pv3IC5P7Tk" src="https://github.com/user-attachments/assets/508edb20-3511-4731-9257-076b0dec4a4e" />
-<img width="642" height="512" alt="infinite_math_test_W1BnItCZxL" src="https://github.com/user-attachments/assets/80655b33-9d30-40f8-9a3e-47ea360e554a" />
+<img width="642" height="512" alt="image" src="https://github.com/user-attachments/assets/2a2aa946-5ac7-47f5-85c9-fe59a42d0bd3" />
 <img width="642" height="512" alt="infinite_math_test_OpyiwMN0G3" src="https://github.com/user-attachments/assets/cdec0e4f-a81a-4683-8c01-503327852901" />
 <img width="642" height="512" alt="image" src="https://github.com/user-attachments/assets/e4d2719d-f5d7-4060-bf22-c825c932c65d" />
