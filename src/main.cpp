@@ -72,7 +72,8 @@ int main(int argc, char* argv[])
         buffer += "\n";
         buffer += std::to_string(backend.incorrect_percent);
         buffer += "\n";
-
+        buffer += std::to_string(backend.level);
+        buffer += "\n";
 
         WriteFile(save_game_file, buffer.c_str(), buffer.size(), &bytesWritten, NULL);
         CloseHandle(save_game_file);

@@ -6,5 +6,8 @@
 	<file>white_cross.png</file>
 	<file>settings_icon.png</file>
 	<file>settings_icon_black.png</file>
+	<file>background.png</file>
+	<file>unnamedregular.otf</file>
+	<file>glonto-egular.ttf</file>
     </qresource>
 </RCC>

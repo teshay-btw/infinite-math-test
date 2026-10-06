@@ -16,7 +16,7 @@ public:
     void start_loop();
     void setRoot(QObject* root);
     
-    void get_primary_numbers(vector<int>& vec);
+    void get_non_primary_numbers(int level);
     Q_INVOKABLE bool check_answer(QString text);
     Q_INVOKABLE void enable_timer(bool is_enabled);
     Q_INVOKABLE void enable_negatives(bool is_enabled);
@@ -30,6 +30,7 @@ public:
     void make_negative_if_enabled(int& number);
     Q_INVOKABLE void choose_sign();
     Q_INVOKABLE void set_numbers();
+    Q_INVOKABLE void set_level(int number);
     void incorrect_answer();
     void correct_answer();
 
@@ -60,7 +61,7 @@ public:
 
     bool add_negatives = 0;
     bool add_brackets = 0;
-
+    int level = 1;
     bool show_stats = 0;
     bool bool_theme = 0;
     bool bool_numpad = 0;
@@ -84,8 +85,9 @@ private:
     int third_number = 0;
     int result = 0;
     bool is_primary = true;
-    vector<int> primary_numbers;
+    vector<int> non_primary_numbers;
 
+    
 
    
     char additional_sign;
@@ -95,10 +97,15 @@ private:
 
     QObject* negative_numbers_checkbox;
     QObject* brackets_checkbox;
-    QObject* theme_checkbox;
     QObject* show_stats_checkbox;
     QObject* numpad_checkbox;
     QObject* timer_checkbox;
     QObject* seconds_userinput;
+    QObject* incorrect_answer_rectangle;
+    QObject* level1_checkbox;
+    QObject* level2_checkbox;
+    QObject* level3_checkbox;
+
+    QObject* progress_bar_animation;
 };
 
